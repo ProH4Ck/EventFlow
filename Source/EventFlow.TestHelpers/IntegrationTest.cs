@@ -118,6 +118,16 @@ namespace EventFlow.TestHelpers
                 CancellationToken.None);
         }
 
+        protected Task<ThingyAutoSaga> LoadAutoSagaAsync(ThingyId thingyId)
+        {
+            // This is specified in the ThingySagaLocator
+            var expectedThingySagaId = new ThingyAutoSagaId($"autosaga-{thingyId.Value}");
+
+            return AggregateStore.LoadAsync<ThingyAutoSaga, ThingyAutoSagaId>(
+                expectedThingySagaId,
+                CancellationToken.None);
+        }
+
         protected async Task<IReadOnlyCollection<PingId>> PublishPingCommandsAsync(
             ThingyId thingyId,
             int count, 

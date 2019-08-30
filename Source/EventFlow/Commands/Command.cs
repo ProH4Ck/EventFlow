@@ -40,19 +40,32 @@ namespace EventFlow.Commands
     {
         public ISourceId SourceId { get; }
         public TIdentity AggregateId { get; }
+        public ICommandMetadata Metadata { get; private set; }
 
         protected Command(TIdentity aggregateId)
-            : this(aggregateId, CommandId.New)
+            : this(aggregateId, CommandId.New, null)
         {
         }
 
         protected Command(TIdentity aggregateId, ISourceId sourceId)
+            : this(aggregateId, sourceId, null)
+        {
+        }
+
+        protected Command(TIdentity aggregateId, ISourceId sourceId, ICommandMetadata metadata)
         {
             if (aggregateId == null) throw new ArgumentNullException(nameof(aggregateId));
             if (sourceId == null) throw new ArgumentNullException(nameof(aggregateId));
 
             AggregateId = aggregateId;
             SourceId = sourceId;
+            Metadata = metadata;
+        }
+
+        public void AddCommandMetadata(ICommandMetadata metadata)
+        {
+            if(metadata == null) throw new ArgumentNullException(nameof(metadata));
+            Metadata = metadata;
         }
 
         public async Task<IExecutionResult> PublishAsync(ICommandBus commandBus, CancellationToken cancellationToken)
@@ -78,6 +91,11 @@ namespace EventFlow.Commands
 
         protected Command(TIdentity aggregateId, ISourceId sourceId)
             : base(aggregateId, sourceId)
+        {
+        }
+
+        protected Command(TIdentity aggregateId, ISourceId sourceId, ICommandMetadata metadata)
+            : base(aggregateId, sourceId, metadata)
         {
         }
     }

@@ -21,40 +21,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using EventFlow.Core;
-using EventFlow.Commands;
-using EventFlow.EventStores;
-using EventFlow.Snapshots;
+using EventFlow.Aggregates;
 
-namespace EventFlow.Aggregates
+namespace EventFlow.TestHelpers.Aggregates.Events
 {
-    public interface IAggregateRoot
+    public class ThingyAutoSagaCompleteRequestedEvent : AggregateEvent<ThingyAggregate, ThingyId>
     {
-        IAggregateName Name { get; }
-        int Version { get; }
-        IEnumerable<IUncommittedEvent> UncommittedEvents { get; }
-        bool IsNew { get; }
-        ICommandMetadata CommandMetadata { get; }
-
-        Task<IReadOnlyCollection<IDomainEvent>> CommitAsync(IEventStore eventStore, ISnapshotStore snapshotStore, ISourceId sourceId, CancellationToken cancellationToken);
-
-        bool HasSourceId(ISourceId sourceId);
-
-        void ApplyEvents(IReadOnlyCollection<IDomainEvent> domainEvents);
-
-        IIdentity GetIdentity();
-
-        Task LoadAsync(IEventStore eventStore, ISnapshotStore snapshotStore, CancellationToken cancellationToken);
-
-        void SetCommandContext(ICommand command);
-    }
-
-    public interface IAggregateRoot<out TIdentity> : IAggregateRoot
-        where TIdentity : IIdentity
-    {
-        TIdentity Id { get; }
     }
 }

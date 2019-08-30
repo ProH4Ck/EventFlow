@@ -21,40 +21,25 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using EventFlow.Core;
 using EventFlow.Commands;
-using EventFlow.EventStores;
-using EventFlow.Snapshots;
 
-namespace EventFlow.Aggregates
+namespace EventFlow.TestHelpers.Aggregates.Commands
 {
-    public interface IAggregateRoot
+    public class ThingyRequestAutoSagaStartCommand : Command<ThingyAggregate, ThingyId>
     {
-        IAggregateName Name { get; }
-        int Version { get; }
-        IEnumerable<IUncommittedEvent> UncommittedEvents { get; }
-        bool IsNew { get; }
-        ICommandMetadata CommandMetadata { get; }
-
-        Task<IReadOnlyCollection<IDomainEvent>> CommitAsync(IEventStore eventStore, ISnapshotStore snapshotStore, ISourceId sourceId, CancellationToken cancellationToken);
-
-        bool HasSourceId(ISourceId sourceId);
-
-        void ApplyEvents(IReadOnlyCollection<IDomainEvent> domainEvents);
-
-        IIdentity GetIdentity();
-
-        Task LoadAsync(IEventStore eventStore, ISnapshotStore snapshotStore, CancellationToken cancellationToken);
-
-        void SetCommandContext(ICommand command);
+        public ThingyRequestAutoSagaStartCommand(ThingyId aggregateId) : base(aggregateId)
+        {
+        }
     }
 
-    public interface IAggregateRoot<out TIdentity> : IAggregateRoot
-        where TIdentity : IIdentity
+    public class ThingyRequestAutoSagaStartCommandHandler : CommandHandler<ThingyAggregate, ThingyId, ThingyRequestAutoSagaStartCommand>
     {
-        TIdentity Id { get; }
+        public override Task ExecuteAsync(ThingyAggregate aggregate, ThingyRequestAutoSagaStartCommand command, CancellationToken cancellationToken)
+        {
+            aggregate.RequestAutoSagaStart();
+            return Task.FromResult(0);
+        }
     }
 }

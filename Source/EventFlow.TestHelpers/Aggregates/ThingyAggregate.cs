@@ -67,6 +67,8 @@ namespace EventFlow.TestHelpers.Aggregates
             Register<ThingyMessageHistoryAddedEvent>(e => _messages.AddRange(e.ThingyMessages));
             Register<ThingySagaStartRequestedEvent>(e => {/* do nothing */});
             Register<ThingySagaCompleteRequestedEvent>(e => {/* do nothing */});
+            Register<ThingyAutoSagaStartRequestedEvent>(e => {/* do nothing */});
+            Register<ThingyAutoSagaCompleteRequestedEvent>(e => {/* do nothing */});
         }
 
         public void DomainErrorAfterFirst()
@@ -122,6 +124,16 @@ namespace EventFlow.TestHelpers.Aggregates
         public void RequestSagaComplete()
         {
             Emit(new ThingySagaCompleteRequestedEvent());
+        }
+
+        public void RequestAutoSagaStart()
+        {
+            Emit(new ThingyAutoSagaStartRequestedEvent());
+        }
+
+        public void RequestAutoSagaComplete()
+        {
+            Emit(new ThingyAutoSagaCompleteRequestedEvent());
         }
 
         public void Apply(ThingyDomainErrorAfterFirstEvent e)

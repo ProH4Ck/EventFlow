@@ -41,15 +41,20 @@ namespace EventFlow.Commands
 
         public ISourceId SourceId => _lazySourceId.Value;
         public TIdentity AggregateId { get; }
+        public ICommandMetadata Metadata { get; private set; }
 
-        protected DistinctCommand(
-            TIdentity aggregateId)
+        protected DistinctCommand(TIdentity aggregateId) : this(aggregateId, null)
+        {
+        }
+
+        protected DistinctCommand(TIdentity aggregateId, ICommandMetadata metadata)
         {
             if (aggregateId == null) throw new ArgumentNullException(nameof(aggregateId));
 
             _lazySourceId = new Lazy<ISourceId>(CalculateSourceId, LazyThreadSafetyMode.PublicationOnly);
 
             AggregateId = aggregateId;
+            Metadata = metadata;
         }
 
         private CommandId CalculateSourceId()
@@ -70,6 +75,12 @@ namespace EventFlow.Commands
         public ISourceId GetSourceId()
         {
             return SourceId;
+        }
+
+        public void AddCommandMetadata(ICommandMetadata metadata)
+        {
+            if (metadata == null) throw new ArgumentNullException(nameof(metadata));
+            Metadata = metadata;
         }
     }
 }

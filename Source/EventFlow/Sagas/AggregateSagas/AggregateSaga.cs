@@ -61,6 +61,8 @@ namespace EventFlow.Sagas.AggregateSagas
             where TCommandAggregateIdentity : IIdentity
             where TExecutionResult : IExecutionResult
         {
+            command.AddCommandMetadata(new CommandMetadata(
+                new KeyValuePair<string, string>(CommandMetadataKeys.SagaId, Id.Value)));
             _unpublishedCommands.Add(
                 new Tuple<ICommand, Func<ICommandBus, CancellationToken, Task<IExecutionResult>>>(
                         command,

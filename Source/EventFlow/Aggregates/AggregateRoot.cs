@@ -27,6 +27,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventFlow.Core;
+using EventFlow.Commands;
 using EventFlow.EventStores;
 using EventFlow.Extensions;
 using EventFlow.Snapshots;
@@ -47,6 +48,7 @@ namespace EventFlow.Aggregates
         public int Version { get; protected set; }
         public bool IsNew => Version <= 0;
         public IEnumerable<IUncommittedEvent> UncommittedEvents => _uncommittedEvents;
+        public ICommandMetadata CommandMetadata { get; private set; }
 
         static AggregateRoot()
         {
@@ -97,6 +99,11 @@ namespace EventFlow.Aggregates
             if (metadata != null)
             {
                 eventMetadata.AddRange(metadata);
+            }
+
+            if (CommandMetadata != null)
+            {
+                eventMetadata.AddRange(CommandMetadata);
             }
 
             var uncommittedEvent = new UncommittedEvent(aggregateEvent, eventMetadata);
@@ -220,6 +227,11 @@ namespace EventFlow.Aggregates
         public override string ToString()
         {
             return $"{GetType().PrettyPrint()} v{Version}(-{_uncommittedEvents.Count})";
+        }
+
+        public void SetCommandContext(ICommand command)
+        {
+            CommandMetadata = command.Metadata;
         }
     }
 }

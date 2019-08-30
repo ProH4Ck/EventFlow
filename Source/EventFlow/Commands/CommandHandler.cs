@@ -53,6 +53,7 @@ namespace EventFlow.Commands
             TCommand command,
             CancellationToken cancellationToken)
         {
+            aggregate.SetCommandContext(command);
             await ExecuteAsync(aggregate, command, cancellationToken).ConfigureAwait(false);
             return ExecutionResult.Success();
         }

@@ -71,7 +71,7 @@ namespace EventFlow.Tests.IntegrationTests
             var testAggregate = await _aggregateStore.LoadAsync<ThingyAggregate, ThingyId>(_thingyId, CancellationToken.None);
 
             // Assert
-            testAggregate.Version.Should().Be(2);
+            testAggregate.Version.Should().Be(3);
             testAggregate.PingsReceived.Should().Contain(PingId.With("95433aa0-11f7-4128-bd5f-18e0ecc4d7c1"));
             testAggregate.PingsReceived.Should().Contain(PingId.With("2352d09b-4712-48cc-bb4f-5560d7c52558"));
         }

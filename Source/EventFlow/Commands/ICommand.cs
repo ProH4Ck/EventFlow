@@ -32,8 +32,11 @@ namespace EventFlow.Commands
 {
     public interface ICommand : IVersionedType
     {
+        ICommandMetadata Metadata { get; }
+
         Task<IExecutionResult> PublishAsync(ICommandBus commandBus, CancellationToken cancellationToken);
         ISourceId GetSourceId();
+        void AddCommandMetadata(ICommandMetadata metadata);
     }
 
     public interface ICommand<in TAggregate, out TIdentity, TResult> : ICommand

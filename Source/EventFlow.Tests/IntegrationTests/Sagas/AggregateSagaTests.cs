@@ -170,6 +170,20 @@ namespace EventFlow.Tests.IntegrationTests.Sagas
             receivedSagaPingIds.Should().BeEquivalentTo(pingsWithRunningSaga);
         }
 
+        [Test]
+        public async Task AutoSagaStartAndAutoComplete()
+        {
+            // Arrange
+            var thingyId = A<ThingyId>();
+
+            // Act
+            await CommandBus.PublishAsync(new ThingyRequestAutoSagaStartCommand(thingyId), CancellationToken.None).ConfigureAwait(false);
+
+            // Assert
+            var thingySaga = await LoadAutoSagaAsync(thingyId).ConfigureAwait(false);
+            thingySaga.State.Should().Be(SagaState.Completed);
+        }
+
         protected override IRootResolver CreateRootResolver(IEventFlowOptions eventFlowOptions)
         {
             _thingySagaStartedSubscriber = new Mock<ISubscribeSynchronousTo<ThingySaga, ThingySagaId, ThingySagaStartedEvent>>();
