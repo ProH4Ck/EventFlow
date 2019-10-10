@@ -4,7 +4,7 @@ Restart-Service docker
 
 # Up containers
 docker-compose -f docker-compose.ci.yml pull
-docker-compose -f docker-compose.ci.yml up -d
+docker-compose -f --compatibility docker-compose.ci.yml up -d
 
 # Install curl
 cinst curl -y --no-progress
