@@ -13,7 +13,7 @@ image: Visual Studio 2019
 
 environment:
   HELPZ_POSTGRESQL_PASS: Password12!
-  HELPZ_MSSQL_SERVER: localhost
+  HELPZ_MSSQL_SERVER: (local)\SQL2017
   HELPZ_MSSQL_USER: sa
   HELPZ_MSSQL_PASS: Password12!
   APPVEYOR_RDP_PASSWORD: Password12!
@@ -25,6 +25,7 @@ artifacts:
 
 services:
   - postgresql101
+  - mssql2017
 
 on_success:
 - choco install codecov
