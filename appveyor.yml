@@ -1,5 +1,6 @@
 init:
-  - git config --global core.autocrlf input
+  - ps: git config --global core.autocrlf input
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 version: 0.76.{build}
 
@@ -15,6 +16,7 @@ environment:
   HELPZ_MSSQL_SERVER: localhost
   HELPZ_MSSQL_USER: sa
   HELPZ_MSSQL_PASS: Password12!
+  APPVEYOR_RDP_PASSWORD: Password12!
 
 test: off
 
@@ -27,6 +29,9 @@ services:
 on_success:
 - choco install codecov
 - codecov -f "Build\\Reports\\opencover-results.xml"
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 nuget:
   account_feed: false
