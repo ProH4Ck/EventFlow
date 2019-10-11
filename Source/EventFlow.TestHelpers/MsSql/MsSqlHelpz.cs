@@ -33,8 +33,6 @@ namespace EventFlow.TestHelpers.MsSql
             var connectionString = CreateConnectionString(label);
             var masterConnectionString = connectionString.NewConnectionString("master");
 
-            Console.WriteLine("$$$CONNECTIONSTRING$$$ " + connectionString);
-
             var sql = $"CREATE DATABASE [{connectionString.Database}]";
             masterConnectionString.Execute(sql);
 
