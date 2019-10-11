@@ -1,4 +1,4 @@
-version: '3.7'
+version: '2.4'
 
 services:
   rabbitmq:
@@ -17,10 +17,7 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
-    deploy:
-      resources:
-        limits:
-          memory: 2G
+    mem_limit: 4g
 
   eventstore:
     image: eventstore/eventstore
