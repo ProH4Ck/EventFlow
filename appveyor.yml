@@ -1,7 +1,8 @@
 init:
   - ps: git config --global core.autocrlf input
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-
+  - ps: [Environment]::SetEnvironmentVariable("LCOW_SUPPORTED", "1", "Machine")
+  - ps: Restart-Service docker
+  
 version: 0.76.{build}
 
 skip_tags: true
@@ -30,9 +31,6 @@ services:
 on_success:
 - choco install codecov
 - codecov -f "Build\\Reports\\opencover-results.xml"
-
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 nuget:
   account_feed: false
